@@ -87,8 +87,8 @@ const TableDepartment = ({
         <SearchOutlined style={{ color: filtered ? "#1890ff" : undefined }} />
       ),
       // Lọc dữ liệu theo giá trị tìm kiếm
-      onFilter: (value: string, record: { name: string }) =>
-        record.name.toLowerCase().includes(value.toLowerCase()),
+      onFilter: (value: string | number | boolean, record: Department) =>
+        record.name.toLowerCase().includes(value.toString().toLowerCase()),
       // Sắp xếp dữ liệu khi sử dụng bộ lọc
       // onFilterDropdownVisibleChange: visible => {
       //     if (visible) {
@@ -111,8 +111,8 @@ const TableDepartment = ({
       render: (_: any, { listEmployee }: any) => (
         <p>{listEmployee ? listEmployee.length : 0}</p>
       ),
-      sorter: (a: { numEmployee: number }, b: { numEmployee: number }) =>
-        a.numEmployee - b.numEmployee,
+      sorter: (a: Department, b: Department) =>
+        (a.listEmployee?.length ?? 0) - (b.listEmployee?.length ?? 0),
     },
 
     {

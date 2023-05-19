@@ -13,7 +13,7 @@ interface TableEmployeeProps {
 
 const TableEmployee = ({ data, handleDelete }: TableEmployeeProps) => {
   const [open, setOpen] = useState(false);
-  const [target, setTarget] = useState<Department>();
+  const [target, setTarget] = useState<Employee>();
   const showModal = () => {
     setOpen(true);
   };
@@ -21,12 +21,12 @@ const TableEmployee = ({ data, handleDelete }: TableEmployeeProps) => {
   const hideModal = () => {
     setOpen(false);
   };
-  const showConfirm = (record: Department) => {
+  const showConfirm = (record: Employee) => {
     setTarget(record);
     setOpen(true);
   };
 
-  const columns: ColumnsType<Department> = [
+  const columns: ColumnsType<Employee> = [
     {
       title: "Tên nhân viên",
       dataIndex: "name",
@@ -73,7 +73,7 @@ const TableEmployee = ({ data, handleDelete }: TableEmployeeProps) => {
       ),
       // Lọc dữ liệu theo giá trị tìm kiếm
 
-      onFilter: (value: any, record: Department) =>
+      onFilter: (value: any, record: Employee) =>
         record.name.toLowerCase().includes(value.toLowerCase()),
       // Sắp xếp dữ liệu khi sử dụng bộ lọc
       // onFilterDropdownVisibleChange: visible => {
@@ -98,14 +98,14 @@ const TableEmployee = ({ data, handleDelete }: TableEmployeeProps) => {
       render: (_: any, { listVehicle }: any) => (
         <p>{listVehicle ? listVehicle.length : 0}</p>
       ),
-      sorter: (a: { numVehicle: number }, b: { numVehicle: number }) =>
-        a.numVehicle - b.numVehicle,
+      sorter: (a: Employee, b: Employee) =>
+        a.listVehicle.length - b.listVehicle.length,
     },
 
     {
       title: "Action",
       key: "action",
-      render: (text: any, record: Department) => (
+      render: (text: any, record: Employee) => (
         <div>
           <Button type="ghost" onClick={() => showConfirm(record)}>
             Delete

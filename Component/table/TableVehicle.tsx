@@ -74,16 +74,15 @@ const TableVehicle = ({ data, handleDelete }: TableVehicleProps) => {
       ),
       // Lọc dữ liệu theo giá trị tìm kiếm
 
-      onFilter: (value: any, record: Department) =>
-        record.name.toLowerCase().includes(value.toLowerCase()),
+      onFilter: (value: string | number | boolean, record: Vehicle) =>
+        record.bienSo.toLowerCase().includes(value.toString().toLowerCase()),
       // Sắp xếp dữ liệu khi sử dụng bộ lọc
       // onFilterDropdownVisibleChange: visible => {
       //     if (visible) {
       //         setTimeout(() => this.searchInput.select());
       //     }
       // },
-      sorter: (a: { name: string }, b: { name: string }) =>
-        a.name.localeCompare(b.name),
+      sorter: (a: Vehicle, b: Vehicle) => a.bienSo.localeCompare(b.bienSo),
       render: (text: string) => <a>{text}</a>,
     },
     {
@@ -96,8 +95,7 @@ const TableVehicle = ({ data, handleDelete }: TableVehicleProps) => {
       title: "Chủ xe",
       dataIndex: "employee",
       key: "employee",
-      sorter: (a: { numVehicle: number }, b: { numVehicle: number }) =>
-        a.numVehicle - b.numVehicle,
+      sorter: (a: Vehicle, b: Vehicle) => a.employee.localeCompare(b.employee),
     },
 
     {
@@ -129,7 +127,7 @@ const TableVehicle = ({ data, handleDelete }: TableVehicleProps) => {
         okText="OK"
         cancelText="Cancel"
       >
-        <p>Bạn chắc chắn xoá xe có biển số {target?.bien_so}</p>
+        <p>Bạn chắc chắn xoá xe có biển số {target?.bienSo}</p>
       </Modal>
     </>
   );

@@ -25,7 +25,7 @@ const TableDepartment = ({
     // console.log(e);
     setOpenEdit(false);
   };
-  const handleEdit = (vehicle: Vehicle) => {
+  const handleEdit = (vehicle: Department) => {
     setTarget(vehicle);
     setOpenEdit(true);
   };

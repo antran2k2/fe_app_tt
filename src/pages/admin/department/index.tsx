@@ -88,13 +88,13 @@ const Department = () => {
   }, []);
   return (
     <AdminLayout selectMenu="department">
-      <TableDepartment
+      {/* <TableDepartment
         key={1}
         editDepartment={editDepartment}
         data={data}
         handleDelete={handleDelete}
         admin={true}
-      />
+      /> */}
       <AddDepartment addDepartment={addDepartment} />
     </AdminLayout>
   );

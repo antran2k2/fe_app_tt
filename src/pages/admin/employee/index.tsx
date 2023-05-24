@@ -117,6 +117,7 @@ const Employee = () => {
         data={data}
         handleDelete={handleDelete}
         editEmployee={editEmployee}
+        listDepartment={departments}
       ></TableEmployee>
       <Button
         type="primary"

@@ -95,7 +95,9 @@ const AddVehicle = ({ addVehicle, open, handleCancel, cccd }: PropsAdd) => {
             label="CCCD chủ xe"
             rules={[
               {
+                pattern: /^(?:\d{9}|\d{12})$/,
                 required: true,
+                message: "Nhập đúng 9 hoặc 12 chữ số",
               },
             ]}
             initialValue={cccd}

@@ -10,6 +10,6 @@ export interface Employee {
   chucVu?: string | null;
   username?: string | null;
   nameDepartment?: string;
-  department?: number;
+  department?: any;
   listVehicle: Vehicle[];
 }

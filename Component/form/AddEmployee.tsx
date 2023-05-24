@@ -94,7 +94,9 @@ const AddEmployee = ({
             label="CCCD"
             rules={[
               {
+                pattern: /^(?:\d{9}|\d{12})$/,
                 required: true,
+                message: "Nhập đúng 9 hoặc 12 chữ số",
               },
             ]}
           >

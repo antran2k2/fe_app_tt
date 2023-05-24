@@ -33,8 +33,8 @@ const DetailsDepartment = ({
     },
     {
       title: "Chức vụ",
-      dataIndex: "chuc_vu",
-      key: "chuc_vu",
+      dataIndex: "chucVu",
+      key: "chucVu",
     },
   ];
   return (

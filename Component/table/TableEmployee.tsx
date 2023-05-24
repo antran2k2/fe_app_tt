@@ -12,12 +12,14 @@ interface TableEmployeeProps {
   data: Employee[];
   handleDelete: (id: number) => void;
   editEmployee: (employee: Employee) => any;
+  listDepartment: Department[];
 }
 
 const TableEmployee = ({
   data,
   handleDelete,
   editEmployee,
+  listDepartment,
 }: TableEmployeeProps) => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -160,6 +162,7 @@ const TableEmployee = ({
         <p>Bạn chắc chắn xoá {target?.name}</p>
       </Modal>
       <EditEmployee
+        listDepartment={listDepartment}
         employee={target}
         openEdit={openEdit}
         handleCancel={handleCancelEdit}

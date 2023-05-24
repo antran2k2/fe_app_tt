@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Button, DatePicker, Form, Input, InputNumber, Modal } from "antd";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Select,
+} from "antd";
 import axios from "axios";
 import { Department } from "../../model/department";
 import { Employee } from "../../model/employee";
@@ -30,6 +38,7 @@ interface PropsEdit {
   employee?: Employee;
   openEdit: boolean;
   handleCancel: any;
+  listDepartment: Department[];
 }
 
 const EditEmployee = ({
@@ -37,6 +46,7 @@ const EditEmployee = ({
   employee,
   openEdit,
   handleCancel,
+  listDepartment,
 }: PropsEdit) => {
   const [form] = Form.useForm();
   const handleSubmit = async (values: any) => {
@@ -49,13 +59,12 @@ const EditEmployee = ({
         .toString()
         .padStart(2, "0")}-${values.dob.$D.toString().padStart(2, "0")}`,
       email: values.email,
-      // ...
+      department: { id: values.idDepartment?.value || 99 },
     };
-    console.log(values);
 
+    // console.log(JSON.stringify(employeeEdit));
     const data = await editEmployee(employeeEdit);
 
-    // onAddUser(data); // gọi callback để cập nhật danh sách user sau khi thêm mới thành công
     form.resetFields(); // reset form sau khi submit thành công
     handleCancel();
   };
@@ -130,6 +139,18 @@ const EditEmployee = ({
             ]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item name="idDepartment" label="Phòng ban" rules={[]}>
+            <Select
+              labelInValue
+              //   defaultValue={{ value: "lucy", label: "Lucy (101)" }}
+              style={{ width: 120 }}
+              options={listDepartment?.map((departmnet) => ({
+                label: departmnet.name,
+                value: departmnet.id,
+              }))}
+              placeholder={employee?.department}
+            />
           </Form.Item>
           <Form.Item name="chucVu" label="Chức vụ" rules={[{}]}>
             <Input />

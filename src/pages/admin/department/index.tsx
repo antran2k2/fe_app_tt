@@ -89,7 +89,6 @@ const Department = () => {
   return (
     <AdminLayout selectMenu="department">
       {/* <TableDepartment
-        key={1}
         editDepartment={editDepartment}
         data={data}
         handleDelete={handleDelete}

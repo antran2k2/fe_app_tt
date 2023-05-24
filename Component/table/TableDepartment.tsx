@@ -1,11 +1,9 @@
 import { Space, Table, Input, Button, Modal } from "antd";
-import React, { useState, useEffect } from "react";
-import { ExclamationCircleOutlined, SearchOutlined } from "@ant-design/icons";
-import confirm from "antd/es/modal/confirm";
+import React, { useState } from "react";
+import { SearchOutlined } from "@ant-design/icons";
 import { Department } from "../../model/department";
 import { ColumnsType } from "antd/es/table";
 import EditDepartment from "../form/EditDepartment";
-import { Vehicle } from "../../model/vehicle";
 import DetailsDepartment from "../form/DetailsDepartment";
 
 interface TableDepartmentProps {

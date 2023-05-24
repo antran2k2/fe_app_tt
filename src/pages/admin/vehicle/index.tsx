@@ -19,11 +19,36 @@ const HomeVehicle = () => {
   const handleCancelAdd = () => {
     setOpenAdd(false);
   };
-  const addVehicle = async (employee: any) => {
+  const editVehicle = async (vehicle: Vehicle) => {
+    try {
+      const response = await axiosInstance.put(
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/vehicle/${vehicle.id}`,
+        vehicle,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      // setData([...data, response.data]);
+      const updatedVehicle = response.data;
+      console.log(updatedVehicle);
+
+      setData((prevData) =>
+        prevData.map((item) =>
+          item.id === updatedVehicle.id ? updatedVehicle : item
+        )
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const addVehicle = async (vehicle: any) => {
     try {
       const response = await axiosInstance.post(
         `${process.env.NEXT_PUBLIC_API_HOST}/api/vehicle/add`,
-        employee,
+        vehicle,
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -72,7 +97,11 @@ const HomeVehicle = () => {
   };
   return (
     <AdminLayout selectMenu="vehicle">
-      <TableVehicle data={data} handleDelete={handleDelete}></TableVehicle>
+      <TableVehicle
+        data={data}
+        handleDelete={handleDelete}
+        editVehicle={editVehicle}
+      ></TableVehicle>
       <Button
         type="primary"
         style={{ backgroundColor: "green" }}

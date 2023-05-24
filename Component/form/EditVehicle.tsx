@@ -1,5 +1,7 @@
-import { useEffect } from "react";
-import { Button, Form, Input, Modal } from "antd";
+import { useState, useEffect } from "react";
+import { Button, Form, Input, InputNumber, Modal } from "antd";
+import axios from "axios";
+import { Vehicle } from "../../model/vehicle";
 const layout = {
   labelCol: {
     span: 6,
@@ -21,35 +23,51 @@ const validateMessages = {
   },
 };
 
-interface PropsAdd {
-  addVehicle: (vehicle: any) => any;
-  open: boolean;
+interface PropsEdit {
+  editVehicle: (vehicle: Vehicle) => any;
+  vehicle?: Vehicle;
+  openEdit: boolean;
   handleCancel: any;
   cccd?: string;
 }
 
-const AddVehicle = ({ addVehicle, open, handleCancel, cccd }: PropsAdd) => {
+const EditVehicle = ({
+  editVehicle,
+  vehicle,
+  openEdit,
+  handleCancel,
+  cccd,
+}: PropsEdit) => {
   const [form] = Form.useForm();
   const handleSubmit = async (values: any) => {
-    const request = {
+    const vehicleEdit: Vehicle = {
+      id: vehicle?.id,
       bienSo: values.bienSo,
-      cccd: values.cccd,
       hangXe: values.hangXe,
+      cccd: vehicle?.cccd,
+      // ...
     };
+    console.log(vehicleEdit);
 
-    await addVehicle(request);
+    const data = await editVehicle(vehicleEdit);
+
+    // onAddUser(data); // gọi callback để cập nhật danh sách user sau khi thêm mới thành công
+    form.resetFields(); // reset form sau khi submit thành công
+    handleCancel();
   };
   useEffect(() => {
-    if (!open) {
-      form.resetFields();
+    if (openEdit) {
+      form.setFieldValue("bienSo", vehicle?.bienSo);
+      form.setFieldValue("hangXe", vehicle?.hangXe);
+      form.setFieldValue("cccd", vehicle?.cccd);
     }
-  }, [open, form]);
+  }, [openEdit]);
 
   return (
     <div>
       <Modal
-        title="Thêm mới phương tiện"
-        open={open}
+        title="Chỉnh sửa phương tiện"
+        open={openEdit}
         onCancel={handleCancel}
         footer={[
           <Button key="cancel" onClick={handleCancel}>
@@ -70,14 +88,14 @@ const AddVehicle = ({ addVehicle, open, handleCancel, cccd }: PropsAdd) => {
         >
           <Form.Item
             name="bienSo"
-            label="Biển số xe"
+            label="Biển số"
             rules={[
               {
                 required: true,
               },
             ]}
           >
-            <Input />
+            <Input placeholder={vehicle?.bienSo} />
           </Form.Item>
           <Form.Item
             name="hangXe"
@@ -88,19 +106,19 @@ const AddVehicle = ({ addVehicle, open, handleCancel, cccd }: PropsAdd) => {
               },
             ]}
           >
-            <Input />
+            <Input placeholder={vehicle?.hangXe} />
           </Form.Item>
           <Form.Item
             name="cccd"
-            label="CCCD chủ xe"
+            label="CCCD"
+            initialValue={cccd}
             rules={[
               {
                 required: true,
               },
             ]}
-            initialValue={cccd}
           >
-            <Input disabled={cccd ? true : false} />
+            <Input placeholder={vehicle?.cccd} disabled={cccd ? true : false} />
           </Form.Item>
         </Form>
       </Modal>
@@ -108,4 +126,4 @@ const AddVehicle = ({ addVehicle, open, handleCancel, cccd }: PropsAdd) => {
   );
 };
 
-export default AddVehicle;
+export default EditVehicle;

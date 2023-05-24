@@ -6,15 +6,35 @@ import { Department } from "../../model/department";
 import { ColumnsType } from "antd/es/table";
 import { Employee } from "../../model/employee";
 import { Vehicle } from "../../model/vehicle";
+import EditVehicle from "../form/EditVehicle";
 
 interface TableVehicleProps {
   data: Vehicle[];
   handleDelete: (id: number) => void;
+  editVehicle: (vehicle: Vehicle) => any;
+  cccd?: string;
 }
 
-const TableVehicle = ({ data, handleDelete }: TableVehicleProps) => {
+const TableVehicle = ({
+  data,
+  handleDelete,
+  editVehicle,
+  cccd,
+}: TableVehicleProps) => {
   const [open, setOpen] = useState(false);
   const [target, setTarget] = useState<Vehicle>();
+
+  const [openEdit, setOpenEdit] = useState(false);
+
+  const handleCancelEdit = (e: any) => {
+    // console.log(e);
+    setOpenEdit(false);
+  };
+  const handleEdit = (vehicle: Vehicle) => {
+    setTarget(vehicle);
+
+    setOpenEdit(true);
+  };
   const showModal = () => {
     setOpen(true);
   };
@@ -95,7 +115,8 @@ const TableVehicle = ({ data, handleDelete }: TableVehicleProps) => {
       title: "Chủ xe",
       dataIndex: "employee",
       key: "employee",
-      sorter: (a: Vehicle, b: Vehicle) => a.employee.localeCompare(b.employee),
+      sorter: (a: Vehicle, b: Vehicle) =>
+        a.employee?.localeCompare(b.employee || "") || 1,
     },
 
     {
@@ -103,10 +124,10 @@ const TableVehicle = ({ data, handleDelete }: TableVehicleProps) => {
       key: "action",
       render: (text: any, record: Vehicle) => (
         <div>
-          <Button type="ghost" onClick={() => showConfirm(record)}>
+          <Button key={1} type="ghost" onClick={() => showConfirm(record)}>
             Delete
           </Button>
-          <Button type="primary" onClick={() => showConfirm(record)}>
+          <Button key={2} type="primary" onClick={() => handleEdit(record)}>
             Edit
           </Button>
         </div>
@@ -129,6 +150,13 @@ const TableVehicle = ({ data, handleDelete }: TableVehicleProps) => {
       >
         <p>Bạn chắc chắn xoá xe có biển số {target?.bienSo}</p>
       </Modal>
+      <EditVehicle
+        vehicle={target}
+        editVehicle={editVehicle}
+        openEdit={openEdit}
+        handleCancel={handleCancelEdit}
+        cccd={cccd}
+      />
     </>
   );
 };

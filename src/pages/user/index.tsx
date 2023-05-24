@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
-import WithAdmin from "../../../hoc/withAdmin";
 import AdminLayout from "../../../layout/AdminLayout";
-import NextNprogress from "nextjs-progressbar";
 import { clearAuth } from "../../../redux/authReducer";
 import { DatePicker } from "antd";
+import WithUser from "../../../hoc/withUser";
+import UserLayout from "../../../layout/UserLayout";
 
-function HomeAdmin() {
+function HomeUser() {
   const { token, id, username, roles } = useSelector(
     (state: any) => state.auth
   );
@@ -16,12 +16,10 @@ function HomeAdmin() {
     dispatch(clearAuth());
   };
   return (
-    <AdminLayout selectMenu="home">
-      <button onClick={handleLogout}>Logout</button>
-      <DatePicker />
-      <p>Home admin</p>
+    <UserLayout selectMenu="home">
+      <p>Home user</p>
       <p>{token}</p>
-    </AdminLayout>
+    </UserLayout>
   );
 }
-export default WithAdmin(HomeAdmin);
+export default WithUser(HomeUser);

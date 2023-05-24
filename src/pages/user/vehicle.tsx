@@ -1,30 +1,44 @@
 import { useEffect, useState } from "react";
-import TableEmployee from "../../../../Component/table/TableEmployee";
-import WithAdmin from "../../../../hoc/withAdmin";
-import AdminLayout from "../../../../layout/AdminLayout";
-import { Employee } from "../../../../model/employee";
 import { useSelector } from "react-redux";
-import AddEmployee from "../../../../Component/form/AddEmployee";
-import { Department } from "../../../../model/department";
 import { Button } from "antd";
 import axiosInstance from "@/pages/api/axiosInstance";
+import WithUser from "../../../hoc/withUser";
+import UserLayout from "../../../layout/UserLayout";
+import { Vehicle } from "../../../model/vehicle";
+import TableVehicle from "../../../Component/table/TableVehicle";
+import AddVehicle from "../../../Component/form/AddVehicle";
 
-const Employee = () => {
+const HomeVehicle = () => {
   const { token, id, username, roles } = useSelector(
     (state: any) => state.auth
   );
-  const [data, setData] = useState<Employee[]>([]);
-  const [departments, setDepartments] = useState<Department[]>([]);
+  const [data, setData] = useState<Vehicle[]>([]);
   const [openAdd, setOpenAdd] = useState(false);
+  const [cccd, setCccd] = useState("");
 
+  const getCccd = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/employee/info`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+      setCccd(response.data.cccd);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleCancelAdd = () => {
     setOpenAdd(false);
   };
-  const editEmployee = async (employee: any) => {
+  const editVehicle = async (vehicle: Vehicle) => {
     try {
       const response = await axiosInstance.put(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/employee/${employee.id}`,
-        employee,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/vehicle/${vehicle.id}`,
+        vehicle,
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -32,12 +46,12 @@ const Employee = () => {
         }
       );
       // setData([...data, response.data]);
-      const updatedEmployee = response.data;
-      console.log(updatedEmployee);
+      const updatedVehicle = response.data;
+      console.log(updatedVehicle);
 
       setData((prevData) =>
         prevData.map((item) =>
-          item.id === updatedEmployee.id ? updatedEmployee : item
+          item.id === updatedVehicle.id ? updatedVehicle : item
         )
       );
       return response.data;
@@ -45,11 +59,11 @@ const Employee = () => {
       console.error(error);
     }
   };
-  const addEmployee = async (employee: any) => {
+  const addVehicle = async (vehicle: any) => {
     try {
       const response = await axiosInstance.post(
-        `${process.env.NEXT_PUBLIC_API_HOST}/api/employee/add`,
-        employee,
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/vehicle/add`,
+        vehicle,
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -67,7 +81,7 @@ const Employee = () => {
   };
   useEffect(() => {
     axiosInstance
-      .get(`${process.env.NEXT_PUBLIC_API_HOST}/api/employee`, {
+      .get(`${process.env.NEXT_PUBLIC_API_HOST}/api/vehicle`, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -79,25 +93,11 @@ const Employee = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
-  useEffect(() => {
-    axiosInstance
-      .get(`${process.env.NEXT_PUBLIC_API_HOST}/api/department/getList`, {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        setDepartments(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    getCccd();
   }, []);
   const handleDelete = (id: number) => {
     axiosInstance
-      .delete(`${process.env.NEXT_PUBLIC_API_HOST}/api/employee/${id}`, {
+      .delete(`${process.env.NEXT_PUBLIC_API_HOST}/api/vehicle/${id}`, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -112,26 +112,27 @@ const Employee = () => {
       });
   };
   return (
-    <AdminLayout selectMenu="employee">
-      <TableEmployee
+    <UserLayout selectMenu="vehicle">
+      <TableVehicle
         data={data}
         handleDelete={handleDelete}
-        editEmployee={editEmployee}
-      ></TableEmployee>
+        editVehicle={editVehicle}
+        cccd={cccd}
+      ></TableVehicle>
       <Button
         type="primary"
         style={{ backgroundColor: "green" }}
         onClick={() => setOpenAdd(true)}
       >
-        Thêm nhân viên
+        Thêm phương tiện mới
       </Button>
-      <AddEmployee
+      <AddVehicle
         open={openAdd}
-        listDepartment={departments}
-        addEmployee={addEmployee}
+        addVehicle={addVehicle}
         handleCancel={handleCancelAdd}
-      ></AddEmployee>
-    </AdminLayout>
+        cccd={cccd}
+      ></AddVehicle>
+    </UserLayout>
   );
 };
-export default WithAdmin(Employee);
+export default WithUser(HomeVehicle);

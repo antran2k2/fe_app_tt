@@ -5,7 +5,7 @@ import { Department } from "../../model/department";
 import { Employee } from "../../model/employee";
 const layout = {
   labelCol: {
-    span: 4,
+    span: 6,
   },
   wrapperCol: {
     span: 16,

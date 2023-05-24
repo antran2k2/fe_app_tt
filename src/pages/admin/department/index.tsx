@@ -4,9 +4,10 @@ import AdminLayout from "../../../../layout/AdminLayout";
 import { Department } from "../../../../model/department";
 import { useEffect, useState } from "react";
 import AddDepartment from "../../../../Component/form/AddDepartment";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axiosInstance from "@/pages/api/axiosInstance";
 import EditDepartment from "../../../../Component/form/EditDepartment";
+import { clearAuth } from "../../../../redux/authReducer";
 
 const Department = () => {
   const { token, id, username, roles } = useSelector(
@@ -44,6 +45,8 @@ const Department = () => {
       );
       // setData([...data, response.data]);
       const updatedDepartment = response.data;
+      console.log(updatedDepartment);
+
       setData((prevData) =>
         prevData.map((item) =>
           item.id === updatedDepartment.id ? updatedDepartment : item
@@ -91,6 +94,7 @@ const Department = () => {
         editDepartment={editDepartment}
         data={data}
         handleDelete={handleDelete}
+        admin={true}
       />
       <AddDepartment addDepartment={addDepartment} />
     </AdminLayout>

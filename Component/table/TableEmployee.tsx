@@ -5,15 +5,37 @@ import confirm from "antd/es/modal/confirm";
 import { Department } from "../../model/department";
 import { ColumnsType } from "antd/es/table";
 import { Employee } from "../../model/employee";
+import EditEmployee from "../form/EditEmployee";
+import DetailsEmployee from "../form/DetailsEmployee";
 
 interface TableEmployeeProps {
   data: Employee[];
   handleDelete: (id: number) => void;
+  editEmployee: (employee: Employee) => any;
 }
 
-const TableEmployee = ({ data, handleDelete }: TableEmployeeProps) => {
+const TableEmployee = ({
+  data,
+  handleDelete,
+  editEmployee,
+}: TableEmployeeProps) => {
   const [open, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+
   const [target, setTarget] = useState<Employee>();
+  const [openDetail, setOpenDetail] = useState(false);
+  const showDetailEmployee = async (employee: Employee) => {
+    await setTarget(employee);
+    setOpenDetail(true);
+  };
+  const handleCancelEdit = (e: any) => {
+    // console.log(e);
+    setOpenEdit(false);
+  };
+  const handleEdit = (employee: Employee) => {
+    setTarget(employee);
+    setOpenEdit(true);
+  };
   const showModal = () => {
     setOpen(true);
   };
@@ -83,13 +105,17 @@ const TableEmployee = ({ data, handleDelete }: TableEmployeeProps) => {
       // },
       sorter: (a: { name: string }, b: { name: string }) =>
         a.name.localeCompare(b.name),
-      render: (text: string) => <a>{text}</a>,
+      render: (name: string, employee: Employee) => (
+        <div onClick={() => showDetailEmployee(employee)}>
+          <a>{name}</a>
+        </div>
+      ),
     },
     {
       title: "Phòng ban",
       dataIndex: "department",
       key: "department",
-      render: (nameDepartment: string) => <a>{nameDepartment}</a>,
+      // render: (nameDepartment: string) => <a>{nameDepartment}</a>,
     },
     {
       title: "Số lượng phương tiện",
@@ -110,7 +136,7 @@ const TableEmployee = ({ data, handleDelete }: TableEmployeeProps) => {
           <Button type="ghost" onClick={() => showConfirm(record)}>
             Delete
           </Button>
-          <Button type="primary" onClick={() => showConfirm(record)}>
+          <Button type="primary" onClick={() => handleEdit(record)}>
             Edit
           </Button>
         </div>
@@ -133,6 +159,17 @@ const TableEmployee = ({ data, handleDelete }: TableEmployeeProps) => {
       >
         <p>Bạn chắc chắn xoá {target?.name}</p>
       </Modal>
+      <EditEmployee
+        employee={target}
+        openEdit={openEdit}
+        handleCancel={handleCancelEdit}
+        editEmployee={editEmployee}
+      />
+      <DetailsEmployee
+        employee={target}
+        openDetail={openDetail}
+        handleCancel={() => setOpenDetail(false)}
+      />
     </>
   );
 };

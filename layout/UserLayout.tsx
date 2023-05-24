@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
   UserOutlined,
-  CarOutlined,
-  VideoCameraOutlined,
+  DesktopOutlined,
+  PieChartOutlined,
+  TeamOutlined,
+  LogoutOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, theme, Button } from "antd";
+import { Layout, Menu, theme, Button, MenuProps } from "antd";
 import { useRouter } from "next/router";
-import { AppProps } from "next/app";
-import { Diagnostic } from "typescript";
-const { Header, Sider, Content } = Layout;
+import { useDispatch, useSelector } from "react-redux";
+import { clearAuth } from "../redux/authReducer";
+
+const { Header, Content, Footer, Sider } = Layout;
+
+type MenuItem = Required<MenuProps>["items"][number];
 
 type DashboardLayoutProps = {
   children: React.ReactNode;
@@ -25,74 +27,88 @@ export default function UserLayout({
 DashboardLayoutProps) {
   const [collapsed, setCollapsed] = useState(false);
   const route = useRouter();
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
-  const [selectedMenuItem, setSelectedMenuItem] = useState("1");
+  const { token, id, username, roles } = useSelector(
+    (state: any) => state.auth
+  );
+  const dispatch = useDispatch();
+  function getItem(
+    label: React.ReactNode,
+    key: React.Key,
+    icon?: React.ReactNode
+  ): MenuItem {
+    return {
+      key,
+      icon,
+      label,
+    } as MenuItem;
+  }
+  const items: MenuItem[] = [
+    getItem("Home", "home", <PieChartOutlined />),
+    getItem("Phòng ban", "department", <DesktopOutlined />),
+    getItem("Thông tin nhân viên", "info", <UserOutlined />),
+    getItem("Phương tiện", "vehicle", <TeamOutlined />),
+  ];
+
   return (
     <Layout>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="logo" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={[selectMenu]}
-          items={[
-            {
-              key: "1",
-              icon: <UserOutlined />,
-              label: "nav 1",
-              onClick: () => {
-                route.push("/user/department");
-              },
-            },
-            {
-              key: "2",
-              icon: <VideoCameraOutlined />,
-              label: "nav 2",
-              onClick: () => {
-                route.push("/user/employee");
-              },
-            },
-            {
-              key: "3",
-              icon: <UploadOutlined />,
-              label: "nav 3",
-              onClick: () => {
-                route.push("/user/vehicle");
-              },
-            },
-          ]}
-        />
-      </Sider>
-      <Layout>
-        <Header
-          style={{
-            padding: 0,
-            background: colorBgContainer,
-          }}
+      <Layout style={{ minHeight: "100vh" }}>
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
         >
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
+          <div className="demo-logo-vertical" />
+          <Menu
+            theme="dark"
+            defaultSelectedKeys={[selectMenu]}
+            mode="inline"
+            items={items}
+            onClick={(item) =>
+              item.key == "home"
+                ? route.push(`/user`)
+                : route.push(`/user/${item.key}`)
+            }
+          ></Menu>
+        </Sider>
+
+        <Layout>
+          <Header
             style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
+              display: "flex",
+              alignItems: "center",
+              background: "none",
             }}
-          />
-        </Header>
-        <Content
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
-            background: colorBgContainer,
-          }}
-        >
-          <main>{children}</main>
-        </Content>
+          >
+            <div
+              style={{ flex: 1, display: "flex", justifyContent: "flex-end" }}
+            >
+              <Button
+                type="link"
+                onClick={() => {
+                  route.push(`/user/info`);
+                }}
+                style={{ color: "black" }}
+              >
+                {username}
+              </Button>
+              <Button
+                type="default"
+                icon={<LogoutOutlined />}
+                onClick={() => {
+                  dispatch(clearAuth());
+                }}
+                // color="white"
+              >
+                Logout
+              </Button>
+            </div>
+          </Header>
+          {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
+          <Content style={{ margin: "0 16px" }}>{children}</Content>
+          <Footer style={{ textAlign: "center" }}>
+            Trang quản lý cho user
+          </Footer>
+        </Layout>
       </Layout>
     </Layout>
   );

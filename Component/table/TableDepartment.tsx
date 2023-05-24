@@ -6,27 +6,31 @@ import { Department } from "../../model/department";
 import { ColumnsType } from "antd/es/table";
 import EditDepartment from "../form/EditDepartment";
 import { Vehicle } from "../../model/vehicle";
+import DetailsDepartment from "../form/DetailsDepartment";
 
 interface TableDepartmentProps {
   data: Department[];
   handleDelete: (id: number) => void;
   editDepartment: (department: Department) => any;
+  admin: boolean;
 }
 
 const TableDepartment = ({
   data,
   handleDelete,
   editDepartment,
+  admin,
 }: TableDepartmentProps) => {
   const [open, setOpen] = useState(false);
   const [target, setTarget] = useState<Department>();
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDetail, setOpenDetail] = useState(false);
   const handleCancelEdit = (e: any) => {
     // console.log(e);
     setOpenEdit(false);
   };
-  const handleEdit = (vehicle: Department) => {
-    setTarget(vehicle);
+  const handleEdit = (department: Department) => {
+    setTarget(department);
     setOpenEdit(true);
   };
   const showModal = () => {
@@ -36,9 +40,14 @@ const TableDepartment = ({
   const hideModal = () => {
     setOpen(false);
   };
-  const showConfirm = (record: Department) => {
-    setTarget(record);
+  const showConfirm = async (record: Department) => {
+    await setTarget(record);
     setOpen(true);
+  };
+
+  const showDetailDepartment = async (department: Department) => {
+    await setTarget(department);
+    setOpenDetail(true);
   };
 
   const columns: ColumnsType<Department> = [
@@ -69,6 +78,7 @@ const TableDepartment = ({
               icon={<SearchOutlined />}
               size="small"
               style={{ width: 90 }}
+              key={1}
             >
               Search
             </Button>
@@ -76,6 +86,7 @@ const TableDepartment = ({
               onClick={() => clearFilters()}
               size="small"
               style={{ width: 90 }}
+              key={2}
             >
               Reset
             </Button>
@@ -97,7 +108,15 @@ const TableDepartment = ({
       // },
       sorter: (a: { name: string }, b: { name: string }) =>
         a.name.localeCompare(b.name),
-      render: (text: string) => <a>{text}</a>,
+
+      render: (name: string, department: Department) =>
+        admin ? (
+          <div onClick={() => showDetailDepartment(department)}>
+            <a>{name}</a>
+          </div>
+        ) : (
+          <p>{name}</p>
+        ),
     },
     {
       title: "Vị trí",
@@ -120,10 +139,18 @@ const TableDepartment = ({
       key: "action",
       render: (text: any, record: Department) => (
         <div>
-          <Button type="ghost" onClick={() => showConfirm(record)}>
+          <Button
+            key="buttonDel"
+            type="ghost"
+            onClick={() => showConfirm(record)}
+          >
             Delete
           </Button>
-          <Button type="primary" onClick={() => handleEdit(record)}>
+          <Button
+            key="buttonEdit"
+            type="primary"
+            onClick={() => handleEdit(record)}
+          >
             Edit
           </Button>
         </div>
@@ -132,7 +159,11 @@ const TableDepartment = ({
   ];
   return (
     <>
-      <Table columns={columns} dataSource={data} />;
+      <Table
+        columns={admin ? columns : columns.slice(0, 2)}
+        dataSource={data}
+      />
+      ;
       <Modal
         title="Xác nhận xoá"
         open={open}
@@ -151,6 +182,11 @@ const TableDepartment = ({
         openEdit={openEdit}
         editDepartment={editDepartment}
         department={target}
+      />
+      <DetailsDepartment
+        department={target}
+        openDetail={openDetail}
+        handleCancel={() => setOpenDetail(false)}
       />
     </>
   );

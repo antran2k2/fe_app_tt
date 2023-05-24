@@ -1,9 +1,9 @@
 import { Employee } from "./employee";
 
 export interface Vehicle {
-  id: number;
+  id?: number;
   hangXe: string;
   bienSo: string;
-  employee: string;
-  cccd: string;
+  employee?: string;
+  cccd?: string;
 }

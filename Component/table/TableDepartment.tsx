@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { Department } from "../../model/department";
 import { ColumnsType } from "antd/es/table";
-import EditDepartment from "../form/EditDepartment";
 import DetailsDepartment from "../form/DetailsDepartment";
+import EditDepartment from "../form/EditDepartment";
 
 interface TableDepartmentProps {
   data: Department[];

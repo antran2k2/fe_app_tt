@@ -28,7 +28,7 @@ const Department1 = () => {
   }, []);
   return (
     <UserLayout selectMenu="department">
-      <TableDepartment
+      {/* <TableDepartment
         data={data}
         handleDelete={function (id: number): void {
           throw new Error("Function not implemented.");
@@ -37,7 +37,7 @@ const Department1 = () => {
           throw new Error("Function not implemented.");
         }}
         admin={false}
-      />
+      /> */}
     </UserLayout>
   );
 };

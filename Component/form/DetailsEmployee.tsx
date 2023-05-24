@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { Button, Form, Input, InputNumber, Modal } from "antd";
+import { Button, Form, Input, InputNumber, Modal, Table } from "antd";
 import axios from "axios";
 import { Department } from "../../model/department";
-import Table, { ColumnsType } from "antd/es/table";
+import { ColumnsType } from "antd/es/table";
 import { Employee } from "../../model/employee";
 import { Vehicle } from "../../model/vehicle";
 const layout = {

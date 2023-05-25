@@ -10,7 +10,7 @@ function LoginPage() {
   const handleSubmit = async (dataForm: any) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/auth/login",
+        `${process.env.NEXT_PUBLIC_API_HOST}/api/auth/login`,
         dataForm
       );
       const { token, id, username, roles } = response.data;
